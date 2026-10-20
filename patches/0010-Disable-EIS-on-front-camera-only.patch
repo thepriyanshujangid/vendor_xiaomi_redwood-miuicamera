@@ -1,0 +1,26 @@
+diff --git a/smali_classes2/com/android/camera/module/video/UserRecordSetting.smali b/smali_classes2/com/android/camera/module/video/UserRecordSetting.smali
+index 07fb9a0..4417f76 100644
+--- a/smali_classes2/com/android/camera/module/video/UserRecordSetting.smali
++++ b/smali_classes2/com/android/camera/module/video/UserRecordSetting.smali
+@@ -3065,2 +3065,21 @@
+ 
++    # redwood: the front camera's EIS (Vidhance/SelfieEIS) deadlocks on
++    # tap-to-focus and trips the SOF watchdog, freezing video recording.
++    # Keep EIS for the back camera, disable it for the front camera.
++    invoke-static {}, Lcom/android/camera/module/loader/camera2/Camera2DataContainer;->getInstance()Lcom/android/camera/module/loader/camera2/Camera2DataContainer;
++
++    move-result-object v0
++
++    invoke-virtual {v0, p2}, Lcom/android/camera/module/loader/camera2/Camera2DataContainer;->isFrontCameraId(I)Z
++
++    move-result v0
++
++    if-eqz v0, :cond_eis_front_ok
++
++    const/4 v0, 0x0
++
++    return v0
++
++    :cond_eis_front_ok
++
+     .line 1
